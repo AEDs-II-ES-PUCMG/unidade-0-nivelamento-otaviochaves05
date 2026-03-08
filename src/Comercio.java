@@ -23,6 +23,9 @@ public class Comercio {
     /** Quantidade produtos cadastrados atualmente no vetor */
     static int quantosProdutos;
 
+    // /** Caminho do arquivo */
+    // static String nomeArquivo = "../data/dadosProdutos.csv";
+
     /** Gera um efeito de pausa na CLI. Espera por um enter para continuar */
     static void pausa(){
         System.out.println("Digite enter para continuar...");
@@ -66,7 +69,7 @@ public class Comercio {
         Produto[] produtosCadastrados = new Produto[MAX_NOVOS_PRODUTOS];
 
         try {
-            arquivo = new Scanner(new File("../data/dadosProdutos.csv"), "UTF-8");
+            arquivo = new Scanner(new File(nomeArquivoDados), "UTF-8");
             numeroProdutos = Integer.parseInt(arquivo.nextLine());
             for (i = 0; i < numeroProdutos && i < MAX_NOVOS_PRODUTOS; i++) {
                 linha = arquivo.nextLine();
@@ -74,7 +77,7 @@ public class Comercio {
                 produtosCadastrados[i] = produto;
             }
             quantosProdutos = i;
-        } catch (IOException excecaoArquivo) {
+        } catch (IOException ex) {
             produtosCadastrados = null;
         }  finally {
             arquivo.close();
@@ -127,7 +130,19 @@ public class Comercio {
      * @param nomeArquivo Nome do arquivo a ser gravado.
      */
     public static void salvarProdutos(String nomeArquivo){
-        //TO DO  
+        FileWriter arquivo = null;
+        try {
+            arquivo = new FileWriter((nomeArquivo), Charset.forName("UTF-8"));
+            arquivo.append(quantosProdutos + "\n");
+
+            for (int i = 0; i < quantosProdutos; i++) {
+                arquivo.append(produtosCadastrados[i].gerarDadosTexto() + "\n");
+            }
+            arquivo.close();
+            System.out.println("Arquivo" + nomeArquivo + "salvo com sucesso.");
+        } catch (IOException ex) {
+            System.out.println("Não foi possível acessar o arquivo:" + nomeArquivo + ".");
+        }
     }
 
     public static void main(String[] args) throws Exception {
