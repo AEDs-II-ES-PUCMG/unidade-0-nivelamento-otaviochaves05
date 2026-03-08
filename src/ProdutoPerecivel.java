@@ -42,7 +42,7 @@ public class ProdutoPerecivel extends Produto {
 
   @Override
   public String toString() {
-    return "ProdutoPerecivel [precoCusto=" + precoCusto + ", dataDeValidade=" + dataDeValidade + ", margemLucro="
-        + margemLucro + ", valorVenda()=" + valorDeVenda() + ", valorDeVenda()=" + valorDeVenda() +"]";
+    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    return super.toString() + " - validade: " + dataDeValidade.format(formato);
   }
 }

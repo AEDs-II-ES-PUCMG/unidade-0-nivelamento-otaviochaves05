@@ -61,7 +61,6 @@ public class Comercio {
      * @return Um vetor com os produtos carregados, ou vazio em caso de problemas de leitura.
      */
     static Produto[] lerProdutos(String nomeArquivoDados) {
-        Produto[] vetorProdutos = null;
         Scanner arquivo = null;
         int i, numeroProdutos;
         String linha;
@@ -82,7 +81,7 @@ public class Comercio {
         }  finally {
             arquivo.close();
         }
-        return vetorProdutos;
+        return produtosCadastrados;
     }
 
     /** Lista todos os produtos cadastrados, numerados, um por linha */
@@ -122,7 +121,30 @@ public class Comercio {
      * Uma sugestão de melhoria mais significativa poderia ser o uso de padrão Factory Method para criação dos objetos.
      */
     static void cadastrarProduto(){
-        //TO DO
+        if (produtosCadastrados.length >= MAX_NOVOS_PRODUTOS) {
+            throw new IllegalStateException("Não é possível cadastrar um novo produto.");
+        }
+        DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        System.out.println("Qual o tipo do produto? [1: Produto não perecível; 2: Produto perecível;]");
+        int tipo = teclado.nextInt();
+
+        System.out.println("Descrição:");
+        String descricao = teclado.nextLine();
+
+        System.out.println("Preço de custo:");
+        double precoCusto = teclado.nextDouble();
+
+        System.out.println("Margem de lucro:");
+        double margemLucro = teclado.nextDouble();
+        
+        if (tipo == 1) {
+            new ProdutoNaoPerecivel(descricao, precoCusto, margemLucro);
+        } else {
+            System.out.println("Data de validade (dd/MM/yyyy):");
+            String dataTexto = teclado.nextLine();
+            LocalDate dataDeValidade = LocalDate.parse(dataTexto, formatoData);
+            new ProdutoPerecivel(descricao, precoCusto, margemLucro, dataDeValidade);
+        }
     }
 
     /**
